@@ -1,2 +1,2 @@
 # FRACTRAN
- A FRCTRAN interpreter in honour of John Horton Conway
+ A FRACTRAN interpreter, in honour of John Horton Conway.
