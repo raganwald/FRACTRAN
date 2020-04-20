@@ -26,25 +26,14 @@ export function * join (first, rest) {
 };
 
 export function * mapWith (fn, iterable) {
-  const asSplit = split(iterable);
-
-  if (asSplit.hasOwnProperty('first')) {
-    const { first, rest } = asSplit;
-
-    yield * join(fn(first), mapWith(fn, rest));
+  for (const value of iterable) {
+    yield fn(value);
   }
 }
 
 export function * filterWith (fn, iterable) {
-  const asSplit = split(iterable);
-
-  if (asSplit.hasOwnProperty('first')) {
-    const { first, rest } = asSplit;
-
-    if (fn(first)) {
-      yield first;
-    }
-    yield * filterWith(fn, rest);
+  for (const value of iterable) {
+    if (fn(value)) yield value;
   }
 }
 

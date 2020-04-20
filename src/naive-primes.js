@@ -44,6 +44,6 @@ const exponentOfTwo = n => {
 
 const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
 const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
-const somePrimes = take(4, compactExponentsOfTwo);
+const somePrimes = take(5, compactExponentsOfTwo);
 
 for (const prime of somePrimes) console.log(prime);
