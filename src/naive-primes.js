@@ -1,3 +1,12 @@
+// NAIVE PRIMES
+//
+// Uses JavaScript's native integer arithmetic. Silently breaks when trying to use numbers larger
+// than Number.Max_SAFE_INTEGER, or when the number of iterations exceeds Number.Max_SAFE_INTEGER,
+// so we include this as a termination condition.
+//
+// Experiments reveal that we can obtain at most foru primes before encountering this condition
+// using built-in integers, so we only take four. Later, we'll play a little Brubek and Take Five.
+
 import parse from './parse';
 import { interpret } from './naive';
 import {
@@ -12,15 +21,25 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
+// Any sufficiently complicated function that loops imperatively contains an ad hoc,
+// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
 const exponentOfTwo = n => {
-  if (!Number.isInteger(n)) return;
-  if (n < 1) return;
-  if (n === 1) return 0;
-  if (n === 2) return 1;
+  let result = 0;
 
-  const half = exponentOfTwo(n / 2);
+  while (true) {
+    // termination conditions
+    if (!Number.isInteger(n)) return;
+    if (n < 1) return;
 
-  if (!!half) return 1 + half;
+    // degenerate condition
+    if (n === 1) break;
+
+    //divide and conquer
+    ++result;
+    n = n/2;
+  }
+
+  return result;
 }
 
 const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);

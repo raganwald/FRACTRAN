@@ -11,12 +11,14 @@ Prerequisites:
 - A recent-ish installaction of node.
 - Babel (if you prefer) https://babeljs.io/docs/en/usage
 
+Installing Babel to compile ES-whatever to node-whatever:
+
 ```bash
 npm install --save-dev @babel/core @babel/cli @babel/preset-env
 npm install --save @babel/polyfill
 ```
 
-And then to run a program:
+And then to run a program, e.g. `naive-primes.js`:
 
 ```bash
 npx babel src --out-dir lib && node ./lib/naive-primes.js

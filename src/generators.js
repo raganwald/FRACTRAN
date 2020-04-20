@@ -1,11 +1,11 @@
-export function * unfoldWith (transformer, seed, terminable = n !== undefined) {
+export function * unfoldWith (transformer, seed, terminateWhen = n => n === undefined) {
   let state = seed;
 
   while (true) {
     state = transformer(state);
     yield state;
 
-    if (terminable(state)) break;
+    if (terminateWhen(state)) break;
   }
 }
 
@@ -31,7 +31,7 @@ export function * mapWith (fn, iterable) {
   if (asSplit.hasOwnProperty('first')) {
     const { first, rest } = asSplit;
 
-    yield * join(fn(first),mapWith(fn, rest));
+    yield * join(fn(first), mapWith(fn, rest));
   }
 }
 
