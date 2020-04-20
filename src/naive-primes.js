@@ -1,16 +1,3 @@
-// Installation:
-//
-// Prerequisites: A recent-ish installaction of node.
-//
-// Babel (if you prefer)
-// https://babeljs.io/docs/en/usage
-//
-// npm install --save-dev @babel/core @babel/cli @babel/preset-env
-// npm install --save @babel/polyfill
-
-// And then to run a program:
-//
-// npx babel src --out-dir lib && node ./lib/playground.js
 import parse from './parse';
 import { interpret } from './naive';
 import {
