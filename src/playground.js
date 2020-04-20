@@ -11,70 +11,19 @@
 // And then to run a program:
 //
 // npx babel src --out-dir lib && node ./lib/playground.js
+import parse from './parse';
+import { interpret } from './naive';
+import {
+  mapWith,
+  filterWith,
+  take,
+} from './generators';
 
 const syntax = `
-2
-17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19, 1/17, 11/13, 13/11, 15/14, 15/2, 55/1
+2 -> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19, 1/17, 11/13, 13/11, 15/14, 15/2, 55/1
 `;
 
-const terms = string => string.trim().split(/(?:\s|[,:;])+/);
-const seedOf = ([_]) => parseInt(_, 10);
-const programOf = ([,..._]) => _;
-
-const seed = seedOf(terms(syntax));
-const fractionalSyntax = programOf(terms(syntax));
-
-const programAsFractions = fractionalSyntax.map(string => string.split('/').map(_ => parseInt(_, 10)));
-
-const fractionToNaiveTransformer = ([p, q]) => (n) => {
-  const nPrime = (n * p);
-  if (nPrime % q === 0) return nPrime / q;
-};
-const fractionsAsTransformers = programAsFractions.map(fractionToNaiveTransformer);
-
-const cases = transformers => n => transformers.map(
-  transformer => transformer(n)
-).find(n => n !== undefined);
-const programAsaTransformer = cases(fractionsAsTransformers);
-
-function * unfoldWith (transformer, seed, terminable = n => n !== undefined && n < Number.Max_SAFE_INTEGER) {
-  let state = seed;
-
-  while (true) {
-    state = transformer(state);
-    yield state;
-
-    if (terminable(state)) break;
-  }
-}
-
-const primeSequence = unfoldWith(programAsaTransformer, 2);
-
-function split (iterable) {
-  const iterator = iterable[Symbol.iterator]();
-  const { done, value: first } = iterator.next();
-
-  if (done) {
-    return { rest: [] };
-  } else {
-    return { first, rest: iterator };
-  }
-};
-
-function * join (first, rest) {
-  yield first;
-  yield * rest;
-};
-
-function * mapWith (fn, iterable) {
-  const asSplit = split(iterable);
-
-  if (asSplit.hasOwnProperty('first')) {
-    const { first, rest } = asSplit;
-
-    yield * join(fn(first),mapWith(fn, rest));
-  }
-}
+const primeSequence = interpret(syntax);
 
 const exponentOfTwo = n => {
   if (!Number.isInteger(n)) return;
@@ -88,31 +37,7 @@ const exponentOfTwo = n => {
 }
 
 const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
-
-function * filterWith (fn, iterable) {
-  const asSplit = split(iterable);
-
-  if (asSplit.hasOwnProperty('first')) {
-    const { first, rest } = asSplit;
-
-    if (fn(first)) {
-      yield first;
-    }
-    yield * filterWith(fn, rest);
-  }
-}
 const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
+const somePrimes = take(4, compactExponentsOfTwo);
 
- function * take (numberToTake, iterable) {
-   const iterator = iterable[Symbol.iterator]();
-
-   for (let i = 0; i < numberToTake; ++i) {
-     const { done, value } = iterator.next();
-     if (done) return;
-     else yield value;
-   }
- }
-
- const fourPrimes = take(4, compactExponentsOfTwo);
-
- for (const prime of fourPrimes) console.log(prime);
+for (const prime of somePrimes) console.log(prime);
