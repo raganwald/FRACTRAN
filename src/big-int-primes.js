@@ -1,14 +1,7 @@
-// NAIVE PRIMES
-//
-// Uses JavaScript's native integer arithmetic. Silently breaks when trying to use numbers larger
-// than Number.Max_SAFE_INTEGER, or when the number of iterations exceeds Number.Max_SAFE_INTEGER,
-// so we include this as a termination condition.
-//
-// Experiments reveal that we can obtain at most foru primes before encountering this condition
-// using built-in integers, so we only take four. Later, we'll play a little Brubek and Take Five.
+// BIG-INT PRIMES
 
 import parse from './parse';
-import { interpret } from './naive-interpreter';
+import { interpret } from './big-int-interpreter';
 import {
   mapWith,
   filterWith,
@@ -21,22 +14,26 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
+const BIG_ZERO = BigInt(0);
+const BIG_ONE = BigInt(1);
+const BIG_TWO = BigInt(2);
+
 // Any sufficiently complicated function that loops imperatively contains an ad hoc,
 // informally-specified, bug-ridden, slow implementation of half of Linear Recursion
 const exponentOfTwo = n => {
-  let result = 0;
+  let result = BIG_ZERO;
 
   while (true) {
-    // termination conditions
-    if (!Number.isInteger(n)) return;
-    if (n < 1) return;
-
     // degenerate condition
-    if (n === 1) break;
+    if (n === BIG_ONE) break;
+
+    // termination conditions
+    if (n % BIG_TWO === BIG_ONE) return;
+    if (n < BIG_ONE) return;
 
     //divide and conquer
     ++result;
-    n = n/2;
+    n = n / BIG_TWO;
   }
 
   return result;
@@ -44,6 +41,6 @@ const exponentOfTwo = n => {
 
 const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
 const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
-const somePrimes = take(5, compactExponentsOfTwo);
+const somePrimes = take(20, compactExponentsOfTwo);
 
 for (const prime of somePrimes) console.log(prime);

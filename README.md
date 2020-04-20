@@ -24,6 +24,12 @@ And then to run a program, e.g. `naive-primes.js`:
 npx babel src --out-dir lib && node ./lib/naive-primes.js
 ```
 
+Or `big-int-primes.js`:
+
+```bash
+npx babel src --out-dir lib && node ./lib/big-int-primes.js
+```
+
 ## More...
 
 [![Building Fizzbuzz in Fractran from the Bottom Up](assets/compiling-to-fractran.png)](https://malisper.me/building-fizzbuzz-fractran-bottom/)
