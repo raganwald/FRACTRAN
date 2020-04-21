@@ -3,8 +3,6 @@
 import parse from './parse';
 import { unfoldWith } from './generators';
 
-const BIG_ZERO = BigInt(0);
-
 const transformerOf = ({ numerator, denominator }) => {
   const bigIntNumerator = BigInt(numerator);
   const bigIntDenominator = BigInt(denominator);
@@ -12,7 +10,7 @@ const transformerOf = ({ numerator, denominator }) => {
   return (n) => {
     const nPrime = (n * bigIntNumerator);
 
-    if (nPrime % bigIntDenominator === BIG_ZERO) {
+    if (nPrime % bigIntDenominator === 0n) {
       return nPrime / bigIntDenominator;
     }
   }

@@ -14,26 +14,22 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
-const BIG_ZERO = BigInt(0);
-const BIG_ONE = BigInt(1);
-const BIG_TWO = BigInt(2);
-
 // Any sufficiently complicated function that loops imperatively contains an ad hoc,
 // informally-specified, bug-ridden, slow implementation of half of Linear Recursion
 const exponentOfTwo = n => {
-  let result = BIG_ZERO;
+  let result = 0n;
 
   while (true) {
     // degenerate condition
-    if (n === BIG_ONE) break;
+    if (n === 1n) break;
 
     // termination conditions
-    if (n % BIG_TWO === BIG_ONE) return;
-    if (n < BIG_ONE) return;
+    if (n % 2n === 1n) return;
+    if (n < 1n) return;
 
     //divide and conquer
     ++result;
-    n = n / BIG_TWO;
+    n = n / 2n;
   }
 
   return result;
@@ -43,4 +39,6 @@ const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
 const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
 const somePrimes = take(20, compactExponentsOfTwo);
 
-for (const prime of somePrimes) console.log(prime);
+const digitsOf = n => n.toString().split().filter(c => /\d/.exec(c)).join();
+
+for (const prime of somePrimes) console.log(digitsOf(prime));
