@@ -1,7 +1,28 @@
-export const digitsOf = n => n.toString().split().filter(c => /\d/.exec(c)).join();
-
 export const argument = () => {
   if (process.argv && process.argv[2] && Number.isInteger(parseInt(process.argv[2], 10))) {
     return parseInt(process.argv[2], 10);
   }
 };
+
+// Any sufficiently complicated function that loops imperatively contains an ad hoc,
+// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
+export const exponentOfTwo = n => {
+  const [ZERO, ONE, TWO] = typeof n === 'bigint' ? [0n, 1n, 2n] : [0, 1, 2];
+
+  let result = ZERO;
+
+  while (true) {
+    // degenerate condition
+    if (n === ONE) break;
+
+    // termination conditions
+    if (n % TWO === ONE) return;
+    if (n < ONE) return;
+
+    //divide and conquer
+    ++result;
+    n = n / TWO;
+  }
+
+  return result;
+}

@@ -7,8 +7,8 @@ import {
   take,
 } from './generators';
 import {
-  digitsOf,
   argument,
+  exponentOfTwo,
 } from './util';
 
 const syntax = `
@@ -18,30 +18,9 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
-// Any sufficiently complicated function that loops imperatively contains an ad hoc,
-// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
-const exponentOfTwo = n => {
-  let result = 0n;
-
-  while (true) {
-    // degenerate condition
-    if (n === 1n) break;
-
-    // termination conditions
-    if (n % 2n === 1n) return;
-    if (n < 1n) return;
-
-    //divide and conquer
-    ++result;
-    n = n / 2n;
-  }
-
-  return result;
-}
-
 let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
 
 const numberOfPrimes = argument();
 if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);
 
-for (const prime of exponentsOfTwo) console.log(digitsOf(prime));
+for (const prime of exponentsOfTwo) console.log(prime.toString());

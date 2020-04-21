@@ -13,34 +13,16 @@ import {
   compact,
   take,
 } from './generators';
-import { argument } from './util';
+import {
+  argument,
+  exponentOfTwo,
+} from './util';
 
 const syntax = `
 2 -> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19, 1/17, 11/13, 13/11, 15/14, 15/2, 55/1
 `;
 
 const primeSequence = interpret(syntax);
-
-// Any sufficiently complicated function that loops imperatively contains an ad hoc,
-// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
-const exponentOfTwo = n => {
-  let result = 0;
-
-  while (true) {
-    // termination conditions
-    if (!Number.isInteger(n)) return;
-    if (n < 1) return;
-
-    // degenerate condition
-    if (n === 1) break;
-
-    //divide and conquer
-    ++result;
-    n = n/2;
-  }
-
-  return result;
-}
 
 let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
 
