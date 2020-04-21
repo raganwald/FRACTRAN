@@ -1,15 +1,19 @@
 // BIG-INT PRIMES
 
-import parse from './parse';
 import { interpret } from './big-int-interpreter';
 import {
   mapWith,
-  filterWith,
+  compact,
   take,
 } from './generators';
+import {
+  digitsOf,
+  argument,
+} from './util';
 
 const syntax = `
-2 -> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19, 1/17, 11/13, 13/11, 15/14, 15/2, 55/1
+  2 -> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19,
+       1/17, 11/13, 13/11, 15/14, 15/2, 55/1
 `;
 
 const primeSequence = interpret(syntax);
@@ -35,10 +39,9 @@ const exponentOfTwo = n => {
   return result;
 }
 
-const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
-const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
-const somePrimes = take(20, compactExponentsOfTwo);
+let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
 
-const digitsOf = n => n.toString().split().filter(c => /\d/.exec(c)).join();
+const numberOfPrimes = argument();
+if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);
 
-for (const prime of somePrimes) console.log(digitsOf(prime));
+for (const prime of exponentsOfTwo) console.log(digitsOf(prime));

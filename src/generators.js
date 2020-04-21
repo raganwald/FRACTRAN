@@ -37,6 +37,10 @@ export function * filterWith (fn, iterable) {
   }
 }
 
+export function compact (iterable) {
+  return filterWith(value => value !== undefined, iterable);
+}
+
 export function * take (numberToTake, iterable) {
   const iterator = iterable[Symbol.iterator]();
 
@@ -45,4 +49,14 @@ export function * take (numberToTake, iterable) {
     if (done) return;
     else yield value;
   }
+}
+
+export function last (iterable) {
+  let lastValue = undefined;
+
+  for (const value of iterable) {
+    lastValue = value;
+  }
+
+  return lastValue;
 }

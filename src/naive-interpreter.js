@@ -33,4 +33,8 @@ export const evaluate = ({ seed, terms }) => {
   return unfoldWith(programTransformer, seed, terminateWhen);
 };
 
-export const interpret = string => evaluate(parse(string));
+export const interpret = (syntax, _seed = undefined) => {
+  const { seed = _seed, terms } = parse(syntax);
+
+  return evaluate({ seed, terms });
+};

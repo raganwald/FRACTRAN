@@ -7,13 +7,13 @@
 // Experiments reveal that we can obtain at most foru primes before encountering this condition
 // using built-in integers, so we only take four. Later, we'll play a little Brubek and Take Five.
 
-import parse from './parse';
 import { interpret } from './naive-interpreter';
 import {
   mapWith,
-  filterWith,
+  compact,
   take,
 } from './generators';
+import { argument } from './util';
 
 const syntax = `
 2 -> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19, 1/17, 11/13, 13/11, 15/14, 15/2, 55/1
@@ -42,8 +42,9 @@ const exponentOfTwo = n => {
   return result;
 }
 
-const exponentsOfTwo = mapWith(exponentOfTwo, primeSequence);
-const compactExponentsOfTwo = filterWith(n => n !== undefined, exponentsOfTwo);
-const somePrimes = take(5, compactExponentsOfTwo);
+let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
 
-for (const prime of somePrimes) console.log(prime);
+const numberOfPrimes = argument();
+if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);
+
+for (const prime of exponentsOfTwo) console.log(prime);
