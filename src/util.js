@@ -26,3 +26,15 @@ export const exponentOfTwo = n => {
 
   return result;
 }
+
+export const pow = (base, exponent) => {
+  const [ZERO, ONE] = typeof base === 'bigint' ? [0n, 1n] : [0, 1];
+
+  if (exponent < ZERO) return;
+
+  let result = ONE;
+
+  while (exponent-- > ZERO) result = result * base;
+
+  return result;
+}
