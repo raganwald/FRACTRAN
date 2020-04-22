@@ -1,4 +1,4 @@
-const seedAndProgramOf = string => string.indexOf('->') >= 0 ? string.trim().split(/\s*->\s*/) : [undefined, string.trim()];
+const seedAndProgramOf = string => string.indexOf('|>') >= 0 ? string.trim().split(/\s*\|>\s*/) : [undefined, string.trim()];
 const seedOf = string => /\d+/.exec(string) ? parseInt(string, 10) : undefined;
 const fractionsOf = string => string.trim().split(
   /(?:\s|[,:;])+/

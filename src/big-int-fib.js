@@ -9,9 +9,11 @@ import {
 } from './generators';
 import {
   argument,
+} from './util';
+import {
   exponentOfTwo,
   pow,
-} from './util';
+} from './integer-math';
 
 const syntax = `
   17/65, 133/34, 17/19, 23/17, 2233/69, 23/29, 31/23,
