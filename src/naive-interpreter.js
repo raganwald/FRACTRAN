@@ -4,6 +4,7 @@
 // than Number.Max_SAFE_INTEGER, so we include this as a termination condition.
 
 import parse from './parse';
+import { cases } from './util';
 import { unfoldWith } from './generators';
 
 const transformerOf = ({ numerator, denominator }) => (n) => {
@@ -11,10 +12,6 @@ const transformerOf = ({ numerator, denominator }) => (n) => {
 
   if (nPrime % denominator === 0) return nPrime / denominator;
 };
-
-const cases = transformers => n => transformers.map(
-  transformer => transformer(n)
-).find(n => n !== undefined);
 
 const terminateWhen = (n) => {
   if (n === undefined) return true;

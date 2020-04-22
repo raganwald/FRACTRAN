@@ -1,28 +1,33 @@
-// BIG-INT INTERPRETER
+// GÖDEL-NUMBER INTERPRETER
 
 import parse from './parse';
-import { cases } from './util';
 import { unfoldWith } from './generators';
+import { cases } from './util';
+import {
+  godel,
+  multiply,
+  divide,
+  asNumber,
+} from './godel';
 
 const transformerOf = ({ numerator, denominator }) => {
-  const bigIntNumerator = BigInt(numerator);
-  const bigIntDenominator = BigInt(denominator);
+  const gNumerator = godel(numerator);
+  const gDenominator = godel(denominator);
 
   return (n) => {
-    const nPrime = (n * bigIntNumerator);
+    const newNumerator = multiply(n, gNumerator);
+    const result = divide(newNumerator, gDenominator);
 
-    if (nPrime % bigIntDenominator === 0n) {
-      return nPrime / bigIntDenominator;
-    }
-  }
+    return result;
+  };
 };
 
 export const evaluate = ({ seed, terms }) => {
-  const bigIntSeed = BigInt(seed);
+  const gSeed = godel(seed);
   const fractionsTransformers = terms.map(transformerOf);
   const programTransformer = cases(fractionsTransformers);
 
-  return unfoldWith(programTransformer, bigIntSeed);
+  return unfoldWith(programTransformer, gSeed);
 };
 
 export const interpret = (syntax, _seed = undefined) => {

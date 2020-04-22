@@ -6,7 +6,7 @@ export const argument = () => {
 
 // Any sufficiently complicated function that loops imperatively contains an ad hoc,
 // informally-specified, bug-ridden, slow implementation of half of Linear Recursion
-export const exponentOfTwo = n => {
+export const exponentOfTwo = (n) => {
   const [ZERO, ONE, TWO] = typeof n === 'bigint' ? [0n, 1n, 2n] : [0, 1, 2];
 
   let result = ZERO;
@@ -38,3 +38,11 @@ export const pow = (base, exponent) => {
 
   return result;
 }
+
+export const cases = transformers => (n) => {
+  for (const transformer of transformers) {
+    const nextN = transformer(n);
+
+    if (nextN !== undefined) return nextN;
+  }
+};
