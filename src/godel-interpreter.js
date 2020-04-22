@@ -21,16 +21,12 @@ const transformerOf = ({ numerator, denominator }) => {
   };
 };
 
-export const evaluate = ({ seed, terms }) => {
+export const interpret = (syntax, _seed = undefined) => {
+  const { seed = _seed, terms } = parse(syntax);
+
   const gSeed = encode(seed);
   const fractionsTransformers = terms.map(transformerOf);
   const programTransformer = cases(fractionsTransformers);
 
   return unfoldWith(programTransformer, gSeed);
-};
-
-export const interpret = (syntax, _seed = undefined) => {
-  const { seed = _seed, terms } = parse(syntax);
-
-  return evaluate({ seed, terms });
 };

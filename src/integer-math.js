@@ -1,5 +1,5 @@
-const encode = BigInt;
-const decode = n => n;
+export const encode = n => BigInt(n);
+export const decode = n => n;
 
 // Any sufficiently complicated function that loops contains an ad hoc,
 // informally-specified, bug-ridden, slow implementation of half of Linear Recursion
@@ -32,11 +32,16 @@ export const pow = (base, exponent) => {
   return result;
 }
 
-export const arithmetic = {
+export const multiply = (a, b) => a * b;
+export const divide = (a, b) => (a % b === 0n) ? a / b : undefined;
+export const prev = n => n - 1n;
+
+export default {
   encode,
   decode,
-  divide:(a, b) => a / b,
-  multiply: (a, b) => a * b,
+  divide,
+  multiply,
   log2,
-  pow
+  pow,
+  prev
 };

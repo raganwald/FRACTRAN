@@ -2,7 +2,7 @@
 //
 // https://oeis.org/wiki/List_of_FRACTRAN_programs_to_compute_core_sequences#Fibonacci_numbers
 
-import { interpret } from './integer-interpreter';
+import interpret from './interpreter';
 import {
   compact,
   last,
@@ -10,9 +10,12 @@ import {
 import {
   argument,
 } from './util';
-import {
+import arithmetic, {
+  encode,
   log2,
   pow,
+  prev,
+  multiply,
 } from './integer-math';
 
 const syntax = `
@@ -20,10 +23,10 @@ const syntax = `
   74/341, 31/37, 41/31, 129/287, 41/43, 13/41, 1/13, 1/3
 `;
 
-const n = BigInt(argument() || (console.log('no value of n supplied, defaulting to 14'), 14));
+const n = encode(argument() || (console.log('no value of n supplied, defaulting to 14'), 14));
 
-const seed = 78n * pow(5n, n - 1n);
+const seed = multiply(encode(78), pow(5n, prev(n)));
 
-const fibonacciNumber = log2(last(compact(interpret(syntax, seed))));
+const fibonacciNumber = log2(last(compact(interpret({ syntax, seed, arithmetic }))));
 
 console.log(`fib(${n.toString()}) = ${fibonacciNumber.toString()}`);

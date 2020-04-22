@@ -16,9 +16,9 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
-let exponentsOfTwo = compact(mapWith(log2, primeSequence));
+let primes = compact(mapWith(log2, primeSequence));
 
 const numberOfPrimes = argument();
-if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);
+if (numberOfPrimes !== undefined) primes = take(numberOfPrimes, primes);
 
-for (const prime of exponentsOfTwo) console.log(prime.toString());
+for (const prime of primes) console.log(prime.toString());

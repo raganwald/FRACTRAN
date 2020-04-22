@@ -1,6 +1,7 @@
 // BIG-INT PRIMES
 
-import { interpret } from './integer-interpreter';
+import interpret from './interpreter';
+import arithmetic, { log2 } from './integer-math';
 import {
   mapWith,
   compact,
@@ -9,20 +10,17 @@ import {
 import {
   argument,
 } from './util';
-import {
-  log2,
-} from './integer-math';
 
 const syntax = `
   2 |> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23,
        77/19,  1/17, 11/13, 13/11, 15/14, 15/2,  55/1
 `;
 
-const primeSequence = interpret(syntax);
+const primeSequence = interpret({ syntax, arithmetic });
 
-let exponentsOfTwo = compact(mapWith(log2, primeSequence));
+let primes = compact(mapWith(log2, primeSequence));
 
 const numberOfPrimes = argument();
-if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);
+if (numberOfPrimes !== undefined) primes = take(numberOfPrimes, primes);
 
-for (const prime of exponentsOfTwo) console.log(prime.toString());
+for (const prime of primes) console.log(prime.toString());

@@ -118,7 +118,7 @@ export const pow = (base, exponent) => {
   return result;
 }
 
-export const arithmetic = {
+export default {
   encode,
   decode,
   divide,
