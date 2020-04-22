@@ -7,7 +7,7 @@ import {
   take,
 } from './generators';
 import { argument } from './util';
-import { exponentOfTwo } from './godel';
+import { log2 } from './godel-math';
 
 const syntax = `
   425 |> 17/91, 78/85, 19/51, 23/38, 29/33, 77/29, 95/23, 77/19,
@@ -16,7 +16,7 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
-let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
+let exponentsOfTwo = compact(mapWith(log2, primeSequence));
 
 const numberOfPrimes = argument();
 if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);

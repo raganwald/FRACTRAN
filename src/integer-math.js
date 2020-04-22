@@ -1,34 +1,42 @@
-// Any sufficiently complicated function that loops imperatively contains an ad hoc,
-// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
-export const exponentOfTwo = (n) => {
-  const [ZERO, ONE, TWO] = typeof n === 'bigint' ? [0n, 1n, 2n] : [0, 1, 2];
+const encode = BigInt;
+const decode = n => n;
 
-  let result = ZERO;
+// Any sufficiently complicated function that loops contains an ad hoc,
+// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
+export const log2 = (n) => {
+  let result = 0n;
 
   while (true) {
     // degenerate condition
-    if (n === ONE) break;
+    if (n === 1n) break;
 
     // termination conditions
-    if (n % TWO === ONE) return;
-    if (n < ONE) return;
+    if (n % 2n === 1n) return;
+    if (n < 1n) return;
 
     //divide and conquer
     ++result;
-    n = n / TWO;
+    n = n / 2n;
   }
 
   return result;
 }
 
 export const pow = (base, exponent) => {
-  const [ZERO, ONE] = typeof base === 'bigint' ? [0n, 1n] : [0, 1];
+  if (exponent < 0n) return;
 
-  if (exponent < ZERO) return;
+  let result = 1n;
 
-  let result = ONE;
-
-  while (exponent-- > ZERO) result = result * base;
+  while (exponent-- > 0n) result = result * base;
 
   return result;
 }
+
+export const arithmetic = {
+  encode,
+  decode,
+  divide:(a, b) => a / b,
+  multiply: (a, b) => a * b,
+  log2,
+  pow
+};

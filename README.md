@@ -30,7 +30,7 @@ npx babel src --out-dir lib && node ./lib/naive-primes.js 3
 Or to print a potentially infinite list of primes using a big integer implementation:
 
 ```bash
-npx babel src --out-dir lib && node ./lib/big-int-primes.js
+npx babel src --out-dir lib && node ./lib/integer-primes.js
   => 2
      3
      5
@@ -47,7 +47,7 @@ npx babel src --out-dir lib && node ./lib/big-int-primes.js
 Or to compute an arbitrary fibonacci number:
 
 ```bash
-npx babel src --out-dir lib && node ./lib/big-int-primes.js 7
+npx babel src --out-dir lib && node ./lib/integer-primes.js 7
   => fib(7) = 13
 ```
 

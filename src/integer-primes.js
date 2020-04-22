@@ -1,6 +1,6 @@
 // BIG-INT PRIMES
 
-import { interpret } from './big-int-interpreter';
+import { interpret } from './integer-interpreter';
 import {
   mapWith,
   compact,
@@ -10,7 +10,7 @@ import {
   argument,
 } from './util';
 import {
-  exponentOfTwo,
+  log2,
 } from './integer-math';
 
 const syntax = `
@@ -20,7 +20,7 @@ const syntax = `
 
 const primeSequence = interpret(syntax);
 
-let exponentsOfTwo = compact(mapWith(exponentOfTwo, primeSequence));
+let exponentsOfTwo = compact(mapWith(log2, primeSequence));
 
 const numberOfPrimes = argument();
 if (numberOfPrimes !== undefined) exponentsOfTwo = take(numberOfPrimes, exponentsOfTwo);

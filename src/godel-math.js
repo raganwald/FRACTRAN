@@ -3,7 +3,7 @@
 
 // Relies on simple factoring code adapted from
 // http://www.javascripter.net/math/primes/factorization.htm
-export const godel = (n) => {
+export const encode = (n) => {
   if (n <= 0 || n > 9007199254740992) return;
 
   const factorization = new Map();
@@ -21,7 +21,7 @@ export const godel = (n) => {
   return factorization;
 }
 
-export const asNumber = g => [...g.entries()].reduce((acc, [factor, exponent]) => acc * Math.pow(factor, exponent), 1);
+export const decode = g => [...g.entries()].reduce((acc, [factor, exponent]) => acc * Math.pow(factor, exponent), 1);
 
 // find the least factor in n by trial division
 function leastFactor(n) {
@@ -95,9 +95,7 @@ export const multiply = (a, b) => {
   return multiplied;
 };
 
-// Any sufficiently complicated function that loops imperatively contains an ad hoc,
-// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
-export const exponentOfTwo = (n) => {
+export const log2 = (n) => {
   const factorsOfN = [...n.entries()];
 
   if (factorsOfN.length !== 1) return;
@@ -105,3 +103,26 @@ export const exponentOfTwo = (n) => {
 
   return factorsOfN[0][1];
 }
+
+const ONE = {};
+
+export const pow = (base, exponent) => {
+  const integerExponent = decode(exponent);
+
+  if (!Number.isInteger(integerExponent)) return;
+
+  let result = ONE;
+
+  while (exponent-- > 0) result = multiply(result, base);
+
+  return result;
+}
+
+export const arithmetic = {
+  encode,
+  decode,
+  divide,
+  multiply,
+  log2,
+  pow
+};

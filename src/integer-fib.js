@@ -2,7 +2,7 @@
 //
 // https://oeis.org/wiki/List_of_FRACTRAN_programs_to_compute_core_sequences#Fibonacci_numbers
 
-import { interpret } from './big-int-interpreter';
+import { interpret } from './integer-interpreter';
 import {
   compact,
   last,
@@ -11,7 +11,7 @@ import {
   argument,
 } from './util';
 import {
-  exponentOfTwo,
+  log2,
   pow,
 } from './integer-math';
 
@@ -24,6 +24,6 @@ const n = BigInt(argument() || (console.log('no value of n supplied, defaulting 
 
 const seed = 78n * pow(5n, n - 1n);
 
-const fibonacciNumber = exponentOfTwo(last(compact(interpret(syntax, seed))));
+const fibonacciNumber = log2(last(compact(interpret(syntax, seed))));
 
 console.log(`fib(${n.toString()}) = ${fibonacciNumber.toString()}`);
