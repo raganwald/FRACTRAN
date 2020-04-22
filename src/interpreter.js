@@ -2,7 +2,6 @@
 
 import parse from './parse';
 import { unfoldWith } from './generators';
-import { cases } from './util';
 
 const transformerOf = ({
     encode, multiply, divide
@@ -19,6 +18,14 @@ const transformerOf = ({
 
     return result;
   };
+};
+
+const cases = transformers => (n) => {
+  for (const transformer of transformers) {
+    const nextN = transformer(n);
+
+    if (nextN !== undefined) return nextN;
+  }
 };
 
 export default ({
