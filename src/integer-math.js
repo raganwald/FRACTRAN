@@ -1,8 +1,9 @@
 export const encode = n => BigInt(n);
 export const decode = n => n;
 
-// Any sufficiently complicated function that loops contains an ad hoc,
-// informally-specified, bug-ridden, slow implementation of half of Linear Recursion
+// Any sufficiently complicated function that loops, contains an ad hoc,
+// informally-specified, bug-ridden, slow implementation of
+// half of Linear Recursion
 export const log2 = (n) => {
   let result = 0n;
 
