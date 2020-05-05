@@ -2,9 +2,9 @@ const parse = (program) => {
   const parseProgram = program => program.split(/\s*;\s*/).map(s => s.trim());
 const parseState = state => state.split(/\s*\|\s*/).map(s => s.trim());
   const parseRule = (rule, stateIndex) => {
-    const [clauses, nextState] = rule.includes('→') ? rule.split(/\s*→\s*/).map(s => s.trim()) : [rule.trim(), stateIndex]
+    const [clauses, nextState] = rule.includes('→') ? rule.split(/\s*→\s*/).map(s => s.trim()) : [rule.trim(), stateIndex + 1]
 
-    return [clauses, typeof nextState === 'string' ? parseInt(nextState, 10) - 1 : nextState];
+    return [clauses, typeof nextState === 'string' ? parseInt(nextState, 10) : nextState];
   };
   const parseClauses = clauses => clauses.split(/\s*\/\s*/).map(s => s.trim());
   const parseClause = clause => {
@@ -16,14 +16,16 @@ const parseState = state => state.split(/\s*\|\s*/).map(s => s.trim());
     return pairs.map(p => p.split(/\s*,\s*/).map(s => parseInt(s, 10)));
   };
 
-  return parseProgram(program).map(
-    (state, stateIndex) => parseState(state).map(
-      rule => {
-        const [_clauses, nextState] = parseRule(rule, stateIndex);
-        const clauses = parseClauses(_clauses).map(parseClause);
+  return ['NULL-STATE'].concat(
+    parseProgram(program).map(
+      (state, stateIndex) => parseState(state).map(
+        rule => {
+          const [_clauses, nextState] = parseRule(rule, stateIndex);
+          const clauses = parseClauses(_clauses).map(parseClause);
 
-        return clauses.concat([nextState]);
-      }
+          return clauses.concat([nextState]);
+        }
+      )
     )
   );
 }
@@ -31,9 +33,9 @@ const parseState = state => state.split(/\s*\|\s*/).map(s => s.trim());
 const interpret = (parsed, input = []) => {
   const tapes = ['ANCHOR', ...input]; // fake 1-indexing
 
-  let stateIndex = 0;
+  let stateIndex = 1;
 
-  run: while (true) {
+  run: while (stateIndex < parsed.length) {
     const rules = parsed[stateIndex];
     for (const [actionClauses, guardClauses, nextState] of rules) {
       if (guardClauses.some(
@@ -55,3 +57,23 @@ const interpret = (parsed, input = []) => {
 
   return output;
 }
+
+const minsky = (program, ...tapes) => interpret(parse(program), tapes);
+
+console.log(JSON.stringify(
+  minsky(
+    '(1,1)/(2,1)|(1,1)/(3,1)',
+    0, 2, 3
+  )
+));
+
+console.log(JSON.stringify(
+  minsky(
+    (
+      '(1,0)/(2,1)→2|(1,0)/(3,1);' + // decrement #2 by one and goto 2, then erase 3
+      '(1,1)(4,1)/(3,1)|(1,0)/(1,0)→3;' + // move 3 to 1 and 4, then goto 3
+      '(3,1)/(4,1)|(1,0)/(1,0)→1' // copy 4 back to 3 3, then return to state 1
+    ),
+    0, 3, 13
+  ),
+));
