@@ -48,7 +48,7 @@ export default (parsed) => {
   for (const rule of state1) {
     const [actionClause, guardClause, nextState] = rule;
     if (nextState > 1) {
-      actionClause.push([stateToTape.get(nextState).stateIndex, 1]);
+      rule[0] = withClause(actionClause, [stateToTape.get(nextState).stateIndex, 1]);
       rule[2] = 1;
     }
   }
