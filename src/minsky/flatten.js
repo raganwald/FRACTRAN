@@ -4,7 +4,7 @@ const maxTapeIndexOf = (parsed) => {
   for (const rules of parsed.slice(1)) {
     for (const [actionClause, guardClause] of rules) {
       for (const [tapeIndex] of actionClause.concat(guardClause)) {
-        if (max === undefined || tapeIndex > max) max=tapeIndex
+        if (max === undefined || tapeIndex > max) max = tapeIndex;
       }
     }
   }
@@ -34,8 +34,8 @@ export default (parsed) => {
 
   const stateToTape = new Map();
 
-  for (let stateNumber = 1; stateNumber <= maxStateNumber; ++stateNumber) {
-    const offset = maxTapeIndex + (2 * stateNumber) - 1;
+  for (let stateNumber = 2; stateNumber <= maxStateNumber; ++stateNumber) {
+    const offset = maxTapeIndex + (2 * stateNumber) - 3;
 
     stateToTape.set(stateNumber, { stateIndex: offset, statePrimeIndex: offset + 1 });
   }
