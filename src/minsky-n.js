@@ -98,6 +98,18 @@ const maxStateNumberOf = (parsed) => {
   return parsed.length - 1;
 }
 
+const NOOP = [1, 0];
+const isNOOP = ([,squares]) => squares === 0;
+const isActionable = ([,squares]) => squares !== 0;
+
+const SUCCESS = [1, 0];
+const isSuccess = ([,squares]) => squares === 0;
+const canFail = ([,squares]) => squares !== 0;
+
+const ruleCanFail = ([, guardClause]) => guardClause.every(canFail);
+
+const withClause = (clauses, clause) => clauses.filter(canFail).concat([clause]);
+
 const parseToMinsky1 = (program) => {
   const parsed = parse(program);
   const maxTapeIndex = maxTapeIndexOf(parsed);
@@ -111,8 +123,11 @@ const parseToMinsky1 = (program) => {
     stateToTape.set(stateNumber, { stateIndex: offset, statePrimeIndex: offset + 1 });
   }
 
-  const state1 = parsed[1]; // first state
+  const state1 = parsed[1];
 
+  // adjust all rules in state 1 to set an emulated state
+  // rather than use an explicit nextState if they point to
+  // another state
   for (const rule of state1) {
     const [actionClause, guardClause, nextState] = rule;
     if (nextState > 1) {
@@ -126,21 +141,33 @@ const parseToMinsky1 = (program) => {
   for (const rules of parsed.slice(2)) {
     ++stateIndex;
 
-    const additionalGuard = [stateToTape.get(stateIndex).stateIndex, 1];
+    if (rules.every(ruleCanFail)) {
+      // if we cannot guarantee action,
+      // add an explicit fall-through to halt
+      // this will get guarded below
+      rules.push([[NOOP], [SUCCESS], 0]);
+    }
+
+    const stateEmulationGuard = [stateToTape.get(stateIndex).stateIndex, 1];
 
     for (const rule of rules) {
       const [actionClause, guardClause, nextState] = rule;
 
       if (nextState === stateIndex) {
-        actionClause.push([stateToTape.get(nextState).statePrimeIndex, 1]);
+        // this rule remains in the same state. we cannot directly
+        // emulate the sate, because we are already guarding for it,
+        // so we set the state-prime
+        rule[0] = withClause(actionClause, [stateToTape.get(nextState).statePrimeIndex, 1]);
       } else if (nextState > 1) {
-        actionClause.push([stateToTape.get(nextState).stateIndex, 1]);
+        // set an emulated state rather than use an explicit nextState
+        // if nextState
+        rule[0] = withClause(actionClause, [stateToTape.get(nextState).stateIndex, 1]);
       }
-      guardClause.push(additionalGuard);
+
+      rule[1] = withClause(guardClause, stateEmulationGuard);
       rule[2] = 1;
     }
 
-    rules.push([[[1,0]], [[1,0], additionalGuard], 0]);
     aggregateRules = aggregateRules.concat(rules); // TODO: refactor to flatMap
 
   }
