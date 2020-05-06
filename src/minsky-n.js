@@ -111,33 +111,53 @@ const parseToMinsky1 = (program) => {
     stateToTape.set(stateNumber, { stateIndex: offset, statePrimeIndex: offset + 1 });
   }
 
-  let minsky1 = parsed[1]; // first state
+  const state1 = parsed[1]; // first state
+
+  for (const rule of state1) {
+    const [actionClause, guardClause, nextState] = rule;
+    if (nextState > 1) {
+      actionClause.push([stateToTape.get(nextState).stateIndex, 1]);
+      rule[2] = 1;
+    }
+  }
 
   let stateIndex = 1;
+  let aggregateRules = [];
   for (const rules of parsed.slice(2)) {
     ++stateIndex;
 
-    const additionalGuard = [stateToTape.get(stateIndex), 1];
+    const additionalGuard = [stateToTape.get(stateIndex).stateIndex, 1];
 
     for (const rule of rules) {
       const [actionClause, guardClause, nextState] = rule;
 
       if (nextState === stateIndex) {
-        actionClause.push([stateToTape.get(statePrimeIndex), 1]);
+        actionClause.push([stateToTape.get(nextState).statePrimeIndex, 1]);
       } else if (nextState > 1) {
-        actionClause.push([stateToTape.get(stateIndex), 1]);
+        actionClause.push([stateToTape.get(nextState).stateIndex, 1]);
       }
       guardClause.push(additionalGuard);
-      rules[2] = 1;
+      rule[2] = 1;
     }
+
     rules.push([[[1,0]], [[1,0], additionalGuard], 0]);
-    minsky1 = rules.concat(minsky1);
+    aggregateRules = aggregateRules.concat(rules); // TODO: refactor to flatMap
+
   }
 
-  return minsky1;
+  for (const { stateIndex, statePrimeIndex } of stateToTape.values()) {
+    const actionClauses = [[stateIndex, 1]];
+    const guardClauses = [[statePrimeIndex, 1]];
+
+    aggregateRules.push([actionClauses, guardClauses, 1]);
+  }
+
+  aggregateRules = aggregateRules.concat(state1);
+
+  return [[]].concat([aggregateRules]);
 }
 
-const ppClauses = clauses => clauses.map(clause => `(${clause.join(',')})`).join('');
+const ppClauses = clauses => clauses.map(c => `(${c.join(',')})`).join('');
 
 const pp = parsed => parsed.slice(1).map(
   (rules, i) => rules.map(
@@ -150,12 +170,10 @@ const pp = parsed => parsed.slice(1).map(
   ).join('|')
 ).join(";\r\n");
 
-// TODO: prime states
-
 const minsky1 = (program, ...tapes) => interpret(parseToMinsky1(program), tapes);
 
 console.log(pp(
-  parse(
+  parseToMinsky1(
     (
       '(1,0)/(2,1)→2|(1,0)/(3,1);'      + // decrement #2 by one and goto 2, then erase 3
       '(1,1)(4,1)/(3,1)|(1,0)/(1,0)→3;' + // move 3 to 1 and 4, then goto 3
@@ -165,4 +183,13 @@ console.log(pp(
   )
 ));
 
-
+console.log(JSON.stringify(
+  minsky1(
+    (
+      '(1,0)/(2,1)→2|(1,0)/(3,1);'      + // decrement #2 by one and goto 2, then erase 3
+      '(1,1)(4,1)/(3,1)|(1,0)/(1,0)→3;' + // move 3 to 1 and 4, then goto 3
+      '(3,1)/(4,1)|(1,0)/(1,0)→1'         // copy 4 back to 3 3, then return to state 1
+    ),
+    0, 3, 13
+  ),
+));
