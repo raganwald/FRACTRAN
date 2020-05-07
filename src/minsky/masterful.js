@@ -44,3 +44,5 @@ export const interpret = (rules, state) => {
 }
 
 export const evaluate = (program, initialState) => interpret(parse(program), initialState);
+
+export const pp = (parsed) => parsed.map(([action, guard]) => `${action}/${guard}`).join(', ');
