@@ -43,7 +43,7 @@ const fib = (x) => {
   const program = (
     '17/65, 133/34, 17/19, 23/17, 2233/69, 23/29, 31/23, 74/341,' +
     ' 31/37, 41/31, 129/287, 41/43, 13/41, 1/13, 1/3'
-  ).split(', ').map(f => f.split('/').map(n => BigInt(n)));
+  ).split(/(?:\s*,|\s)\s*/).map(f => f.split('/').map(n => BigInt(n)));
 
   let n = 78n * pow(5n, BigInt(x) - 1n);
 
