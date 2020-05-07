@@ -28,7 +28,7 @@ const ruleCanFail = ([, guardClause]) => guardClause.every(canFail);
 
 const withClause = (clauses, clause) => clauses.filter(canFail).concat([clause]);
 
-export default (parsed) => {
+export const flatten = (parsed) => {
   const maxTapeIndex = maxTapeIndexOf(parsed);
   const maxStateNumber = maxStateNumberOf(parsed);
 
