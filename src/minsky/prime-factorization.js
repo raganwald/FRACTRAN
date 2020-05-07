@@ -33,7 +33,7 @@ export const toFactors = (n) => {
   return factorization;
 }
 
-const pow = (base, exponent) => {
+export const pow = (base, exponent) => {
   base = BigInt(base);
   exponent = BigInt(exponent);
 

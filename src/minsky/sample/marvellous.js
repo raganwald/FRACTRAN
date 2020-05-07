@@ -1,7 +1,7 @@
-import { flatten } from '../marvellous';
-import { parse, interpret, evaluate, pp } from '../magnificent';
+import { toMarvellous } from '../marvellous';
+import { evaluate } from '../magnificent';
 
-const evaluateFlattened = (program, ...tapes) => interpret(flatten(parse(program)), tapes);
+const evaluateMarvellous = (program, ...tapes) => evaluate(toMarvellous(program), ...tapes);
 
 const magnificentMultiplicationMachine = (`
   (1^0)/(2^1)→2,    (1^0)/(3^1)   ;
@@ -20,12 +20,12 @@ const marvelousMultiplicationMachine = (`
   (1^0)/(3^1)
 `);
 
-console.log(pp(
-  flatten(parse(magnificentMultiplicationMachine))
-));
+console.log(
+  toMarvellous(magnificentMultiplicationMachine)
+);
 
 console.log(JSON.stringify(
-  evaluateFlattened(
+  evaluateMarvellous(
     magnificentMultiplicationMachine, 0, 3, 13
   ),
 ));

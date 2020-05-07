@@ -60,7 +60,7 @@ export const interpret = (parsed, input = []) => {
 
 export const evaluate = (program, ...tapes) => interpret(parse(program), tapes);
 
-const ppClauses = clauses => clauses.map(c => `(${c.join(',')})`).join('');
+const ppClauses = clauses => clauses.map(c => `(${c.join('^')})`).join('');
 
 export const pp = (parsed) => parsed.slice(1).map(
   (rules, i) => rules.map(
@@ -70,5 +70,5 @@ export const pp = (parsed) => parsed.slice(1).map(
         ppClauses(guardClauses) +
         (nextState === i + 1 ? '' : `→${nextState}`)
     )
-  ).join('|')
+  ).join(', ')
 ).join(";\r\n");

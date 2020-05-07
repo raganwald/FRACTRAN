@@ -1,3 +1,5 @@
+import { parse, pp } from './magnificent';
+
 const maxTapeIndexOf = (parsed) => {
   let max = undefined;
 
@@ -28,7 +30,8 @@ const ruleCanFail = ([, guardClause]) => guardClause.every(canFail);
 
 const withClause = (clauses, clause) => clauses.filter(canFail).concat([clause]);
 
-export const flatten = (parsed) => {
+export const toMarvellous = (program) => {
+  const parsed = parse(program);
   const maxTapeIndex = maxTapeIndexOf(parsed);
   const maxStateNumber = maxStateNumberOf(parsed);
 
@@ -98,6 +101,6 @@ export const flatten = (parsed) => {
 
   aggregateRules = aggregateRules.concat(state1);
 
-  return [[]].concat([aggregateRules]);
+  return pp([[]].concat([aggregateRules]));
 }
 
